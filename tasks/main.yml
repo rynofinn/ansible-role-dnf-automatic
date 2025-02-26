@@ -13,6 +13,36 @@
   import_tasks: dnf4.yml
   when: ansible_os_family == 'RedHat' and ansible_distribution == "Fedora" and ansible_distribution_major_version | int == 40
 
+- name: Create dnf-automatic timer override directory
+  ansible.builtin.file:
+    path: /etc/systemd/system/dnf-automatic-install.timer.d
+    state: "directory"
+    mode: "0755"
+  when: dnf_automatic_timer_OnCalendar != "6:00"
+
+- name: Deploy dnf-automatic timer override file
+  ansible.builtin.template:
+    src: timer_oncalendar.conf.j2
+    dest: /etc/systemd/system/dnf-automatic-install.timer.d/timer_oncalendar.conf
+    mode: "0644"
+  notify: Reload systemd
+  when: dnf_automatic_timer_OnCalendar != "6:00"
+
+- name: Remove dnf-automatic timer override file
+  ansible.builtin.file:
+    path: /etc/systemd/system/dnf-automatic-install.timer.d
+    state: absent
+  notify: Reload systemd
+  when: dnf_automatic_timer_OnCalendar == "6:00"
+
+- name: Perform auto reboot specific tasks
+  when: dnf_automatic_reboot | bool
+  block:
+    - name: Install dependencies needed for reboot
+      ansible.builtin.package:
+        name: "{{ dnf_automatic_reboot_dependencies }}"
+        state: present
+
 - name: Manage dnf automatic version 5 for fedora41
   import_tasks: dnf5.yml
   when: ansible_os_family == 'RedHat' and ansible_distribution == "Fedora" and ansible_distribution_major_version | int >= 41
