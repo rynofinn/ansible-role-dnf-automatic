@@ -43,8 +43,17 @@
     enabled: true
   # run always if not in check mode or if the timer unit exists
   # regardless of the check mode state
-  when: not ansible_check_mode or
-        dnf_automatic_install_timer.status["LoadState"] == "loaded"
+  when: dnf_automatic_install_timer.status["LoadState"] == "loaded" and
+        dnf_automatic_apply_updates | bool
+
+- name: Stop and disable systemd timer for dnf-automatic
+  ansible.builtin.service:
+    name: dnf-automatic-install.timer
+    state: stopped
+    enabled: false
+  # run always if not in check mode or if the timer unit exists
+  # regardless of the check mode state
+  when: not dnf_automatic_apply_updates | bool
 
 - name: Check status of dnf-automatic-reboot.timer
   ansible.builtin.systemd:

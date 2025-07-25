@@ -64,20 +64,20 @@
   import_tasks: dnf5.yml
   when: ansible_os_family == 'RedHat' and ansible_distribution == "Fedora" and ansible_distribution_major_version | int >= 41
 
-- name: "Check status of {{ dnf_automatic_systemd_timer }}"
-  ansible.builtin.systemd:
-    name: "{{ dnf_automatic_systemd_timer }}"
-  register: dnf_automatic_install_timer
+#- name: "Check status of {{ dnf_automatic_systemd_timer }}"
+#  ansible.builtin.systemd:
+#    name: "{{ dnf_automatic_systemd_timer }}"
+#  register: dnf_automatic_install_timer
 
-- name: Start and enable systemd timer for dnf-automatic
-  ansible.builtin.service:
-    name: "{{ dnf_automatic_systemd_timer }}"
-    state: started
-    enabled: true
-  # run always if not in check mode or if the timer unit exists
-  # regardless of the check mode state
-  when: not ansible_check_mode or
-        dnf_automatic_install_timer.status["LoadState"] == "loaded"
+#- name: Start and enable systemd timer for dnf-automatic
+#  ansible.builtin.service:
+#    name: "{{ dnf_automatic_systemd_timer }}"
+#    state: started
+#    enabled: true
+#  # run always if not in check mode or if the timer unit exists
+#  # regardless of the check mode state
+#  when: not ansible_check_mode or
+#        dnf_automatic_install_timer.status["LoadState"] == "loaded"
 
 - name: Check status of dnf-automatic-reboot.timer
   ansible.builtin.systemd:
