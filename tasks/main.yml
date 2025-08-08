@@ -64,12 +64,12 @@
   import_tasks: dnf5.yml
   when: ansible_os_family == 'RedHat' and ansible_distribution == "Fedora" and ansible_distribution_major_version | int >= 41
 
-#- name: "Check status of {{ dnf_automatic_systemd_timer }}"
+# - name: "Check status of {{ dnf_automatic_systemd_timer }}"
 #  ansible.builtin.systemd:
 #    name: "{{ dnf_automatic_systemd_timer }}"
 #  register: dnf_automatic_install_timer
 
-#- name: Start and enable systemd timer for dnf-automatic
+# - name: Start and enable systemd timer for dnf-automatic
 #  ansible.builtin.service:
 #    name: "{{ dnf_automatic_systemd_timer }}"
 #    state: started
