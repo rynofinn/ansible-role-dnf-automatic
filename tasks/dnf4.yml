@@ -31,20 +31,19 @@
         - dnf-automatic-reboot.timer
       notify: Reload systemd
 
-- name: Check status of dnf-automatic-install.timer
+- name: Check status of dnf-automatic-download.timer
   ansible.builtin.systemd:
-    name: dnf-automatic-install.timer
-  register: dnf_automatic_install_timer
+    name: dnf-automatic-download.timer
+  register: dnf_automatic_download_timer
 
 - name: Start and enable systemd timer for dnf-automatic
   ansible.builtin.service:
-    name: dnf-automatic-install.timer
+    name: dnf-automatic-download.timer
     state: started
     enabled: true
   # run always if not in check mode or if the timer unit exists
   # regardless of the check mode state
-  when: dnf_automatic_install_timer.status["LoadState"] == "loaded" and
-        dnf_automatic_apply_updates | bool
+  when: dnf_automatic_download_timer.status["LoadState"] == "loaded"
 
 - name: Stop and disable systemd timer for dnf-automatic
   ansible.builtin.service:

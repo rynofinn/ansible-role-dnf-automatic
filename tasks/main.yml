@@ -3,12 +3,12 @@
 
 - name: Manage dnf automatic version 4 for centos8
   import_tasks: dnf4.yml
-  when: ansible_os_family == 'RedHat' and ansible_distribution == "CentOS" and ansible_distribution_major_version | int <= 8
+  when: ansible_os_family == 'RedHat' and ansible_distribution == "CentOS" and ansible_distribution_major_version | int <= 9
 
 - name: Set DNF4 variables
   ansible.builtin.set_fact:
     dnf_automatic_package_name: dnf-automatic
-    dnf_automatic_systemd_timer: dnf-automatic-install.timer
+    dnf_automatic_systemd_timer: dnf-automatic-download.timer
   when: ansible_pkg_mgr == "dnf4" or ansible_pkg_mgr == "dnf"
 
 - name: Set DNF5 variables
